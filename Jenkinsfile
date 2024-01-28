@@ -35,8 +35,12 @@ pipeline {
         }
         stage('Package') {
             agent any
-            steps {              
+            steps {        
+
                 script{
+                    sshagent(['slave2']) {
+                    sh "scp -o StrictHostKeyChecking=no server-script.sh ec2-user@172.31.32.240:/home/ec2-user"
+                    sh "ssh -o StrictHostKeyChecking=no ec2-user@172.31.32.240 'bash server-script.sh'"
                    echo "Creating the package"
                    sh "mvn package"
                 }             
